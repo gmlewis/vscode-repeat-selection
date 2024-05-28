@@ -2,7 +2,7 @@
   "name": "repeat-selection",
   "displayName": "Repeat Selection",
   "description": "Copies selected text and pastes repeatedly based on user input.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.89.0"
   },

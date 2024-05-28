@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "repeat-selection.helloWorld",
-        "title": "Hello World"
+        "command": "repeat-selection.repeatSelection",
+        "title": "Repeat Selection"
       }
     ]
   },

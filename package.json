@@ -20,17 +20,18 @@
     ]
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs --fix --ignore-path .gitignore",
     "pretest": "pnpm run lint",
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.89.0",
+    "@stylistic/eslint-plugin": "^2.1.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5",
+    "@types/vscode": "^1.89.0",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
   }
 }

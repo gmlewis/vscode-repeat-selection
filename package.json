@@ -1,6 +1,6 @@
 {
   "name": "repeat-selection",
-  "displayName": "RepeatSelection",
+  "displayName": "Repeat Selection",
   "description": "Copies selected text and pastes repeatedly based on user input.",
   "version": "0.0.1",
   "engines": {
@@ -12,10 +12,12 @@
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "repeat-selection.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "repeat-selection.helloWorld",
+        "title": "Hello World"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

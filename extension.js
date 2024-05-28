@@ -10,83 +10,52 @@ const activate = (context) => {
   console.log('Congratulations, your extension "repeat-selection" is now active!')
 
   const disposable = vscode.commands.registerCommand('repeat-selection.repeatSelection', () => {
-    // The code you place here will be executed every time your command is executed
-
-    // Get user input
     const opt = {
       placeHolder: 'default: 1',
       prompt: 'Input the number of times to paste selected text.',
     }
-
-    const input = vscode.window.showInputBox(opt)
-
+    const input = vscode.window.showInputBox(opt)  // get user input
     if (!input) {
       console.log(`Aborting: input='${input}'`)
       return
     }
 
-    input.then(function (val) {
+    input.then((val) => {
       // Convert string to int
       // console.log(`val=${val}`)
-      let inputAsNumber = parseInt(val, 10)
-
-      if (!inputAsNumber) {
-        // If nothing entered default to pasting selected text inplace
-        inputAsNumber = 1
-      }
-      // console.log(`inputAsNumber=${inputAsNumber}`)
+      const numCopies = parseInt(val, 10) || 1
+      // console.log(`numCopies=${numCopies}`)
 
       const newPositions = []
 
       const textEditor = vscode.window.activeTextEditor
       textEditor.edit((builder) => {
         textEditor.selections.forEach(selection => {
-          // console.log(`GML: selection=${JSON.stringify(selection)}`)
+          console.log(`GML: selection=${JSON.stringify(selection)}`)
           // Get selected text
           const text = textEditor.document.getText(new vscode.Range(selection.start, selection.end))
-          // console.log(`text.length=${text.length}: text='${text}'`)
+          // const numLines = text.split(/\r\n|\r|\n/).length
+          console.log(`text.length=${text.length}: text='${text}'`)
 
-          const numLines = text.split(/\r\n|\r|\n/).length
-
-          if ((text.length * inputAsNumber) > MAX_LENGTH) {
+          if ((text.length * numCopies) > MAX_LENGTH) {
             const msg = 'Final text length exceeds max of ' + MAX_LENGTH.toString() + 'on line ' + selection.start.line + '.'
             vscode.window.showErrorMessage(msg)
             return
           }
 
-          // Build string to insert
-          let str = ''
-          for (let i = 0; i < inputAsNumber; i++) {
-            str += text
-            newPositions.push([selection.end.line + (numLines - 1) * i, selection.start.character])
-            // let cursorPosition = new vscode.Position(selection.end.line + (numLines - 1) * i, selection.start.character)
-            // console.log(`GML: cursorPosition=${JSON.stringify(cursorPosition)}`)
-            // let newSelection = new vscode.Selection(cursorPosition, cursorPosition)
-            // console.log(`GML: newSelection=${JSON.stringify(newSelection)}`)
-            // newSelections.push(newSelection)
-          }
-          // console.log(`str='${str}'`)
+          const str = processSelection({ numCopies, text, selection, newPositions })
 
           // Replace selected text with repeated text
           builder.replace(selection, str)
-
-          // // Reset cursor position
-          // let cursorPosition = new vscode.Position(selection.end.line, selection.start.character)
-          // console.log(`GML: cursorPosition=${JSON.stringify(cursorPosition)}`)
-          // let newSelection = new vscode.Selection(cursorPosition, cursorPosition)
-          // console.log(`GML: newSelection=${JSON.stringify(newSelection)}`)
-          // newSelections.push(newSelection)
         })
-
-      }
-      )
+      })
 
       const newSelections = []
       newPositions.forEach((v) => {
         const cursorPosition = new vscode.Position(v[0], v[1])
-        // console.log(`GML: cursorPosition=${JSON.stringify(cursorPosition)}`)
+        console.log(`GML: [${v[0]},${v[1]}] => cursorPosition=${JSON.stringify(cursorPosition)}`)
         const newSelection = new vscode.Selection(cursorPosition, cursorPosition)
-        // console.log(`GML: newSelection=${JSON.stringify(newSelection)}`)
+        console.log(`GML: newSelection=${JSON.stringify(newSelection)}`)
         newSelections.push(newSelection)
       })
 
@@ -98,10 +67,24 @@ const activate = (context) => {
   context.subscriptions.push(disposable)
 }
 
+const processSelection = ({ numCopies, text, selection, newPositions }) => {
+  const numLines = selection.end.line - selection.start.line
+  const charDiff = Math.abs(selection.end.character - selection.start.character)
+  let str = ''
+  for (let i = 0; i < numCopies; i++) {
+    str += text
+    const linePos = selection.end.line + numLines * i
+    const charPos = selection.active.character + charDiff * i
+    newPositions.push([linePos, charPos])
+  }
+  return str
+}
+
 // this method is called when your extension is deactivated
 const deactivate = () => { }
 
 module.exports = {
   activate,
   deactivate,
+  processSelection,
 }

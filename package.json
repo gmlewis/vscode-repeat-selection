@@ -20,6 +20,10 @@
     ]
   },
   "scripts": {
+    "vscode:prepublish": "pnpm run esbuild-base --minify",
+    "esbuild-base": "esbuild ./extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "pnpm run esbuild-base --sourcemap",
+    "esbuild-watch": "pnpm run esbuild-base --sourcemap --watch",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs --fix --ignore-path .gitignore",
     "pretest": "pnpm run lint",
     "test": "vscode-test"
@@ -31,6 +35,7 @@
     "@types/vscode": "^1.89.0",
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.21.4",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5"
   }

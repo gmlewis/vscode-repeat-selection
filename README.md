@@ -24,6 +24,32 @@ To build this plugin, run:
 $ ./build.sh
 ```
 
+## Testing
+
+To test this plugin, run:
+
+```bash
+$ ./test-all.sh
+```
+
+## Packaging
+
+To package this plugin for use with VSCode, run:
+
+```bash
+$ ./package.sh
+```
+
+You will then have a file called `repeat-selection-0.1.0.vsix` that you can
+install directly into VSCode as an extention:
+
+* Click on Extensions
+* Click the 3 dots to the right of the word "Extensions"
+* Select "Install from VSIX..."
+* Find the file `repeat-selection-0.1.0.vsix` and click "Open"
+
+The plugin is now installed and is called "Repeat Selection".
+
 ### 0.1.0
 
 Initial release of repeat-selection

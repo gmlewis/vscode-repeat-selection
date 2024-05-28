@@ -17,7 +17,6 @@ suite('Repeat Selection Test Suite', () => {
       name: 'forward-select entire line 2 including newline',
       numCopies: 3,
       text: 'line 2\n',
-      numLines: 2,
       selection: {
         start: { line: 1, character: 0 },
         end: { line: 2, character: 0 },
@@ -28,10 +27,22 @@ suite('Repeat Selection Test Suite', () => {
       wantNewPositions: [[2, 0], [3, 0], [4, 0]],
     },
     {
+      name: 'reverse-select entire line 2 including newline',
+      numCopies: 3,
+      text: 'line 2\n',
+      selection: {
+        start: { line: 2, character: 0 },
+        end: { line: 1, character: 0 },
+        active: { line: 1, character: 0 },
+        anchor: { line: 1, character: 0 },
+      },
+      want: 'line 2\nline 2\nline 2\n',
+      wantNewPositions: [[1, 0], [2, 0], [3, 0]],
+    },
+    {
       name: 'forward-select line 2 start to end',
       numCopies: 3,
       text: 'line 2',
-      numLines: 1,
       selection: {
         start: { line: 1, character: 0 },
         end: { line: 1, character: 6 },
@@ -41,6 +52,32 @@ suite('Repeat Selection Test Suite', () => {
       want: 'line 2line 2line 2',
       wantNewPositions: [[1, 6], [1, 12], [1, 18]],
     },
+    {
+      name: 'reverse-select line 2 end to start',
+      numCopies: 3,
+      text: 'line 2',
+      selection: {
+        start: { line: 1, character: 6 },
+        end: { line: 1, character: 0 },
+        active: { line: 1, character: 0 },
+        anchor: { line: 1, character: 0 },
+      },
+      want: 'line 2line 2line 2',
+      wantNewPositions: [[1, 0], [1, 6], [1, 12]],
+    },
+    {
+      name: 'forward-select line 1 and part of line 2',
+      numCopies: 3,
+      text: 'line 1\n line ',
+      selection: {
+        start: { line: 0, character: 0 },
+        end: { line: 1, character: 5 },
+        active: { line: 1, character: 5 },
+        anchor: { line: 0, character: 0 },
+      },
+      want: 'line 1\n line line 1\n line line 1\n line ',
+      wantNewPositions: [[1, 5], [2, 5], [3, 5]],
+    },
   ]
 
   tests.forEach((tt) => {
@@ -49,7 +86,6 @@ suite('Repeat Selection Test Suite', () => {
       const got = repeatSelection.processSelection({
         numCopies: tt.numCopies,
         text: tt.text,
-        numLines: tt.numLines,
         selection: tt.selection,
         newPositions,
       })

@@ -34,7 +34,6 @@ const activate = (context) => {
           console.log(`GML: selection=${JSON.stringify(selection)}`)
           // Get selected text
           const text = textEditor.document.getText(new vscode.Range(selection.start, selection.end))
-          // const numLines = text.split(/\r\n|\r|\n/).length
           console.log(`text.length=${text.length}: text='${text}'`)
 
           if ((text.length * numCopies) > MAX_LENGTH) {
@@ -68,12 +67,12 @@ const activate = (context) => {
 }
 
 const processSelection = ({ numCopies, text, selection, newPositions }) => {
-  const numLines = selection.end.line - selection.start.line
-  const charDiff = Math.abs(selection.end.character - selection.start.character)
+  const numLines = Math.abs(selection.end.line - selection.start.line)
+  const charDiff = numLines === 0 ? Math.abs(selection.end.character - selection.start.character) : 0
   let str = ''
   for (let i = 0; i < numCopies; i++) {
     str += text
-    const linePos = selection.end.line + numLines * i
+    const linePos = selection.active.line + numLines * i
     const charPos = selection.active.character + charDiff * i
     newPositions.push([linePos, charPos])
   }
